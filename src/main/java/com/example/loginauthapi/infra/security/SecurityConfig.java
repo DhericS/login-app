@@ -25,27 +25,30 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/favicon.ico"
+                        ).permitAll()
+
                         .requestMatchers(HttpMethod.GET,
                                 "/login",
                                 "/register",
                                 "/home",
                                 "/products",
                                 "/products/form",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/favicon.ico"
+                                "/products/form/**",
+                                "/products/delete/**",
+                                "/api/products"
                         ).permitAll()
+
                         .requestMatchers(HttpMethod.POST,
                                 "/auth/login",
                                 "/auth/register",
-                                "/auth/logout"
+                                "/auth/logout",
+                                "/products/save"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/form").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/products/save").permitAll()
-
-
-
 
                         .anyRequest().authenticated()
                 )
@@ -53,6 +56,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 
     @Bean

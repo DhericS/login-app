@@ -27,24 +27,29 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = recoverToken(request);
+        String uri = request.getRequestURI();
 
+        if (uri.startsWith("/css/") || uri.startsWith("/js/") || uri.startsWith("/images/") || uri.equals("/favicon.ico")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = recoverToken(request);
         if (token != null) {
             String login = tokenService.validateToken(token);
-
             if (login != null) {
                 var user = userRepository.findByEmail(login).orElse(null);
-
                 if (user != null) {
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-                    var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
         }
 
         filterChain.doFilter(request, response);
     }
+
 
 
     private String recoverToken(HttpServletRequest request) {
