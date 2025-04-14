@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Produto</title>
+
+    <link rel="stylesheet" th:href="@{/css/product-form.css}">
+
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+
+
+
+<div class="form-container">
+    <h2 th:text="${produto.id == null} ? 'Cadastrar Produto' : 'Editar Produto'">Formulário</h2>
+
+    <form th:action="@{/products/save}" method="post" th:object="${produto}">
+        <input type="hidden" th:field="*{id}" />
+
+        <label for="name">Nome:</label>
+        <input id="name" type="text" th:field="*{name}" required />
+
+        <label for="description">Descrição:</label>
+        <input id="description" type="text" th:field="*{description}" required />
+
+        <label for="price">Preço:</label>
+        <input id="price" type="number" step="0.01" th:field="*{price}" required />
+
+        <label for="amount">Quantidade:</label>
+        <input id="amount" type="number" th:field="*{amount}" required />
+
+        <label for="category">Categoria:</label>
+        <input id="category" type="text" th:field="*{category}" required />
+
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+<script th:src="@{/js/product-form.js}"></script>
+<script th:src="@{/js/logout.js}"></script>
+
+</body>
+</html>

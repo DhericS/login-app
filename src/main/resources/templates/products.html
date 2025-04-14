@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+
+
+<div class="container">
+    <h2>Lista de Produtos</h2>
+
+    <a class="add-btn" th:href="@{/products/form}">Cadastrar Novo Produto</a>
+
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Categoria</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${produtos}">
+            <td th:text="${p.name}">nome</td>
+            <td th:text="${p.description}">descrição</td>
+            <td th:text="${p.price}">preço</td>
+            <td th:text="${p.amount}">quantidade</td>
+            <td th:text="${p.category}">categoria</td>
+            <td>
+                <a class="edit" th:href="@{'/products/form/' + ${p.id}}">Editar</a>
+                <a class="delete" th:href="@{'/products/delete/' + ${p.id}}">Excluir</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/js/products.js}"></script>
+<script src="/js/logout.js"></script>
+
+</body>
+</html>
