@@ -16,7 +16,6 @@ public class ViewController {
         return "home";
     }
 
-
     @GetMapping("/logout")
     public String logout() {
         return "logout";

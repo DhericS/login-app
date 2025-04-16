@@ -20,6 +20,7 @@ import java.util.Collections;
 public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     TokenService tokenService;
+
     @Autowired
     UserRepository userRepository;
 
@@ -29,11 +30,19 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
+        // Redireciona acesso à raiz "/" para "/login"
+        if (uri.equals("/")) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        // Libera arquivos estáticos sem autenticação
         if (uri.startsWith("/css/") || uri.startsWith("/js/") || uri.startsWith("/images/") || uri.equals("/favicon.ico")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Lógica de autenticação via token JWT
         String token = recoverToken(request);
         if (token != null) {
             String login = tokenService.validateToken(token);
@@ -50,12 +59,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
-
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
         return authHeader.replace("Bearer ", "");
     }
-
 }
